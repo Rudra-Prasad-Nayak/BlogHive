@@ -1,5 +1,7 @@
 # Environment variables
 .env
+client/.env
+server/.env
 
 # Logs
 logs
