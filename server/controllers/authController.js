@@ -1,53 +1,42 @@
-import userModel from "../models/userModel.js";
-import bcrypt from "bcrypt";
-import { generateToken } from "../utils/generateToken.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
 
-export const registerUser = async (req, res) => {
-  try {
-    let { fullName, email, password } = req.body;
-    let user = await userModel.findOne({ email });
-    if (user) return res.status(409).json({ message: "User already exists", success: false });
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(password, salt, async (err, hash) => {
-        if (err) return res.send(err.message);
-        let user = await userModel.create({ fullName, email, password: hash });
-        let token = generateToken(user);
-        res.cookie("token", token);
-        res.status(201).json({ message: "User Created Successfully", success: true });
-      });
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error", success: false });
+export const register = async (req, res) => {
+  const { name, email, password } = req.body || {};
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, password required" });
   }
+  const exists = await User.findOne({ email });
+  if (exists) return res.status(400).json({ message: "Email already in use" });
+
+  const hash = await bcrypt.hash(password, 10);
+  const user = await User.create({ name, email, password: hash });
+  const token = signToken(user._id);
+  res.json({
+    token,
+    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+  });
 };
 
-export const loginUser = async (req, res) => {
-  try {
-    let { email, password } = req.body;
-    let user = await userModel.findOne({ email });
-    if (!user) return res.status(403).json({ message: "Email or Password incorrect", success: false });
+export const login = async (req, res) => {
+  const { email, password } = req.body || {};
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) return res.status(400).json({ message: "Invalid credentials" });
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) return res.status(400).json({ message: "Invalid credentials" });
+  if (user.isBanned) return res.status(403).json({ message: "User banned" });
 
-    bcrypt.compare(password, user.password, (err, result) => {
-      if (err) return res.status(500).json({ success: false, message: "Server error" });
-      if (result) {
-        let token = generateToken(user);
-        res.cookie("token", token, { httpOnly: true });
-        res.status(200).json({ message: "Login successfully", success: true, token, email, fullName: user.fullName });
-      } else {
-        res.status(401).json({ success: false, message: "Email or Password incorrect" });
-      }
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error", success: false });
-  }
+  const token = signToken(user._id);
+  res.json({
+    token,
+    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+  });
 };
 
-export const logoutUser = async (req, res) => {
-  try {
-    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "lax" });
-    res.status(200).json({ message: "Logout successfully", success: true });
-  } catch (error) {
-    res.status(500).json({ message: "Server error during logout", success: false });
-  }
+export const me = async (req, res) => {
+  res.json(req.user);
 };

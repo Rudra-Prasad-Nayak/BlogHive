@@ -1,9 +1,15 @@
-import express from "express";
-import { loginUser, registerUser, logoutUser } from "../controllers/authController.js";
+import { Router } from "express";
+import {
+  listUsers,
+  updateUserRole,
+  toggleBan,
+} from "../controllers/userController.js";
+import { protect, restrictTo } from "../middlewares/authMiddleware.js";
 
-const router = express.Router();
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.get("/logout", logoutUser);
+const router = Router();
+
+router.get("/", protect, restrictTo("editor", "admin"), listUsers);
+router.put("/:id/role", protect, restrictTo("admin"), updateUserRole);
+router.put("/:id/toggle-ban", protect, restrictTo("admin"), toggleBan);
 
 export default router;
