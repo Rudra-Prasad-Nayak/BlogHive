@@ -58,13 +58,13 @@ function Header() {
           </nav>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             {/* Theme controls */}
             <div className="relative">
               {/* Theme toggle button */}
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-300"
+                className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300"
                 aria-label="Toggle dark mode"
               >
                 {darkMode ? (
@@ -91,117 +91,13 @@ function Header() {
                   </svg>
                 )}
               </button>
-
-              {/* Color theme selector */}
-              <div className="ml-2 inline-block relative">
-                <button
-                  onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-dark-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-300"
-                  aria-label="Select color theme"
-                >
-                  <div className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600 overflow-hidden">
-                    <div
-                      className={`w-full h-full ${
-                        colorTheme === COLOR_THEMES.DEFAULT
-                          ? "bg-primary-500"
-                          : colorTheme === COLOR_THEMES.DARK_BLUE
-                          ? "bg-dark-blue-500"
-                          : colorTheme === COLOR_THEMES.PURPLE
-                          ? "bg-purple-500"
-                          : colorTheme === COLOR_THEMES.GREEN
-                          ? "bg-green-500"
-                          : "bg-orange-500"
-                      }`}
-                    ></div>
-                  </div>
-                </button>
-
-                {/* Theme dropdown */}
-                {isThemeMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-dark-700">
-                    <div className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-dark-700">
-                      Select Theme
-                    </div>
-                    <button
-                      onClick={() => {
-                        changeColorTheme(COLOR_THEMES.DEFAULT);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm ${
-                        colorTheme === COLOR_THEMES.DEFAULT
-                          ? "bg-gray-100 dark:bg-dark-700"
-                          : ""
-                      } hover:bg-gray-100 dark:hover:bg-dark-700 flex items-center`}
-                    >
-                      <span className="w-4 h-4 mr-2 rounded-full bg-primary-500"></span>
-                      Blue (Default)
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeColorTheme(COLOR_THEMES.DARK_BLUE);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm ${
-                        colorTheme === COLOR_THEMES.DARK_BLUE
-                          ? "bg-gray-100 dark:bg-dark-700"
-                          : ""
-                      } hover:bg-gray-100 dark:hover:bg-dark-700 flex items-center`}
-                    >
-                      <span className="w-4 h-4 mr-2 rounded-full bg-dark-blue-500"></span>
-                      Dark Blue
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeColorTheme(COLOR_THEMES.PURPLE);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm ${
-                        colorTheme === COLOR_THEMES.PURPLE
-                          ? "bg-gray-100 dark:bg-dark-700"
-                          : ""
-                      } hover:bg-gray-100 dark:hover:bg-dark-700 flex items-center`}
-                    >
-                      <span className="w-4 h-4 mr-2 rounded-full bg-purple-500"></span>
-                      Purple
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeColorTheme(COLOR_THEMES.GREEN);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm ${
-                        colorTheme === COLOR_THEMES.GREEN
-                          ? "bg-gray-100 dark:bg-dark-700"
-                          : ""
-                      } hover:bg-gray-100 dark:hover:bg-dark-700 flex items-center`}
-                    >
-                      <span className="w-4 h-4 mr-2 rounded-full bg-green-500"></span>
-                      Green
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeColorTheme(COLOR_THEMES.ORANGE);
-                        setIsThemeMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm ${
-                        colorTheme === COLOR_THEMES.ORANGE
-                          ? "bg-gray-100 dark:bg-dark-700"
-                          : ""
-                      } hover:bg-gray-100 dark:hover:bg-dark-700 flex items-center`}
-                    >
-                      <span className="w-4 h-4 mr-2 rounded-full bg-orange-500"></span>
-                      Orange
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Auth buttons */}
             <div className="hidden md:flex items-center space-x-2">
               <Link
                 to="/login"
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 border border-primary-600 rounded-md transition-colors duration-300"
               >
                 Log in
               </Link>
